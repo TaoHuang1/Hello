@@ -1,0 +1,99 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class node{
+private:
+    int data;
+    node* next_node;
+public:
+    friend class list;
+    node(int = 0, node* = NULL);
+    int retrive();
+    node* next();
+};
+
+node::node(int e, node* n) :data(e), next_node(n){};
+
+node* node::next() {
+    return next_node;
+}
+
+int node::retrive() {
+    return data;
+}
+
+class list {
+private:
+    node *list_head;
+public:
+    list() ;
+    bool empty() const;
+    node *head()  ;
+    void push(int n);
+    int remove();
+};
+
+list::list():list_head(NULL) {};
+
+bool list::empty() const {
+    return list_head==NULL;
+}
+
+node* list::head() {
+    return list_head;
+}
+
+void list::push(int n) {
+    if(empty()){
+        list_head = new node(n, NULL);
+    }else{
+        list_head = new node(n, head());
+    }
+}
+
+int list::remove() {
+    node* temp;
+    int e;
+    temp = list_head;
+    e = temp->data;
+    list_head = list_head->next_node;
+    delete temp;
+
+    return e;
+}
+
+int main() {
+    int num, left, right, max_height, temp, total =0;
+    list s;
+    node* p;
+    cin>>num;
+
+    for(int i = 0; i < num; i++) {
+        cin >> temp;
+        s.push(temp);
+    }
+
+    for(int i = 0; i < num; i++){
+        left = s.remove();
+        p = s.head();
+        max_height = 1;
+
+        for(int j =0; j < num - i - 1; j++){
+            right = p->retrive();
+
+            if(max_height > left){
+                break;
+            }
+
+            if(left >= max_height and right >= max_height){
+                total += 1;
+            }
+            max_height = max(max_height, right);
+            p = p->next();
+        }
+    }
+
+    cout<<total;
+    return 0;
+}
